@@ -58,9 +58,23 @@ kpi_type_filter = st.sidebar.multiselect("Select KPI Type", ["Topline KPI", "Tie
 # Filter dataset
 filtered_df = df[(df["Strategic Outcome"].isin(strategic_outcome_filter)) & (df["KPI Type"].isin(kpi_type_filter))]
 
-# Display Dataframe
+# Display Summary Metrics
+st.write("### KPI Summary")
+st.metric(label="Overall Progress", value=f"{df['Progress (%)'].mean():.2f}%", delta="vs last quarter")
+st.metric(label="Best Performing KPI", value=df.loc[df['Progress (%)'].idxmax(), 'KPI Name'], delta=f"{df['Progress (%)'].max()}%")
+st.metric(label="Lowest Performing KPI", value=df.loc[df['Progress (%)'].idxmin(), 'KPI Name'], delta=f"{df['Progress (%)'].min()}%")
+
+# Display Dataframe with Conditional Formatting
 st.write("### KPI Performance Data")
-st.dataframe(filtered_df)
+def color_progress(val):
+    if val >= 80:
+        return 'background-color: lightgreen'
+    elif val >= 50:
+        return 'background-color: yellow'
+    else:
+        return 'background-color: lightcoral'
+
+st.dataframe(filtered_df.style.applymap(color_progress, subset=['Progress (%)']))
 
 # Generate Bar Chart
 st.write("### KPI Progress Overview")
