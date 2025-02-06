@@ -95,4 +95,3 @@ st.pyplot(fig)
 # Summary Statistics
 st.write("### Summary Statistics")
 st.write(filtered_df.groupby("Strategic Outcome")["Progress (%)"].mean().round(2))
-Updated KPI summary & color-coded progress
